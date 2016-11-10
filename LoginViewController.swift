@@ -23,7 +23,7 @@
 import UIKit
 import CoreData
 
-class LoginViewController: UIViewController {
+class LoginViewController: UIViewController, UITextFieldDelegate {
     var managedObjectContext: NSManagedObjectContext?
     
     @IBOutlet weak var navigationButton: UIButton!
@@ -33,7 +33,18 @@ class LoginViewController: UIViewController {
     @IBOutlet weak var passwordTextField: UITextField!
     
     
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        emailTextField.delegate = self
+        passwordTextField.delegate = self
+        
+    }
     
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        // Hide the keyboard.
+        textField.resignFirstResponder()
+        return true
+    }
     
     @IBAction func testLogin(_ sender: AnyObject) {
         self.performSegue(withIdentifier: "loginAccepted", sender: nil)

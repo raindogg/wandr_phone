@@ -127,13 +127,11 @@ class DetailViewController: UIViewController, UITextFieldDelegate {
         let myUrl = NSURL(string: firstUrl)
         print(myUrl)
         let request = NSMutableURLRequest(url: myUrl! as URL)
-        print(request)
         request.httpMethod = "POST"
         request.addValue("application/json", forHTTPHeaderField: "Accept")
         let task = URLSession.shared.dataTask(with: request as URLRequest) {
             (data, response, error) in
             if error != nil {
-                print(error)
                 self.displayStatus(conditional: false)
             } else {
                 do {

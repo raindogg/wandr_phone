@@ -46,8 +46,38 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         return true
     }
     
+    struct globalId {
+       static var userId = "test"
+    }
+    
     @IBAction func testLogin(_ sender: AnyObject) {
-        self.performSegue(withIdentifier: "loginAccepted", sender: nil)
+        let email = emailTextField.text
+        let pass = passwordTextField.text
+        let encodedPass = pass?.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed)
+        let myUrl = "https://polar-castle-64141.herokuapp.com/users/remote?email=\(email!)&password=\(encodedPass!)"
+        let newUrl = NSURL(string: myUrl)
+        let request = NSMutableURLRequest(url: newUrl! as URL)
+        request.httpMethod = "POST"
+        request.addValue("application/json", forHTTPHeaderField: "Accept")
+        let task = URLSession.shared.dataTask(with: request as URLRequest) {
+            (data, response, error) in
+            if error != nil {
+                print(error)
+            } else {
+                do {
+                    let responseData = try JSONSerialization.jsonObject(with: data!, options: .mutableContainers) as? [String: Any]
+                    print(responseData)
+                    if let parsedJson = responseData {
+                        let userId = parsedJson["id"]
+                        print(userId)
+                        self.performSegue(withIdentifier: "loginAccepted", sender: nil)
+                    }
+                } catch {
+                    print(error)
+                }
+            }
+        }; task.resume()
+        
     }
     
     

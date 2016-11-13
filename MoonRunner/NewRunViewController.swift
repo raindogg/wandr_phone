@@ -108,7 +108,7 @@ class NewRunViewController: UIViewController {
   }
 
   @IBAction func stopPressed(_ sender: AnyObject) {
-    let actionSheet = UIActionSheet(title: "HIke Stopped", delegate: self, cancelButtonTitle: "Cancel", destructiveButtonTitle: nil, otherButtonTitles: "Save", "Discard")
+    let actionSheet = UIActionSheet(title: "Hike Stopped", delegate: self, cancelButtonTitle: "Cancel", destructiveButtonTitle: nil, otherButtonTitles: "Save", "Discard")
     actionSheet.actionSheetStyle = .default
     actionSheet.show(in: view)
   }
@@ -122,6 +122,7 @@ class NewRunViewController: UIViewController {
     func saveRun() {
         //1
         let savedRun = NSEntityDescription.insertNewObject(forEntityName: "Run", into: managedObjectContext!) as! Run
+        print(savedRun)
         savedRun.distance = distance as NSNumber
         savedRun.duration = seconds as NSNumber
         savedRun.timestamp = NSDate() as Date

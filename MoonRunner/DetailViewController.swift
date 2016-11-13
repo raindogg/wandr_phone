@@ -123,7 +123,8 @@ class DetailViewController: UIViewController, UITextFieldDelegate {
         let encodedTitle = title.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed)
         let requestLength = "&length=" + length
         let requestPublic = "&public=" + isPublic
-        let firstUrl = "https://polar-castle-64141.herokuapp.com/treks/?user_id=1" + encodedTitle! + requestLength + requestPublic
+        let user = globalId.userId
+        let firstUrl = "https://polar-castle-64141.herokuapp.com/treks/?user_id=\(user)" + encodedTitle! + requestLength + requestPublic
         let myUrl = NSURL(string: firstUrl)
         print(myUrl)
         let request = NSMutableURLRequest(url: myUrl! as URL)

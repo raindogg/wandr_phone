@@ -22,6 +22,10 @@
 
 import UIKit
 import CoreData
+struct globalId {
+    static var userId = String()
+}
+
 
 class LoginViewController: UIViewController, UITextFieldDelegate {
     var managedObjectContext: NSManagedObjectContext?
@@ -31,12 +35,17 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var passwordLabel: UILabel!
     @IBOutlet weak var emailTextField: UITextField!
     @IBOutlet weak var passwordTextField: UITextField!
+    @IBOutlet weak var statusField: UILabel!
+    @IBOutlet weak var activityWheel: UIActivityIndicatorView!
+    
     
     
     override func viewDidLoad() {
         super.viewDidLoad()
         emailTextField.delegate = self
         passwordTextField.delegate = self
+        statusField.isHidden = true
+        activityWheel.isHidden = true
         
     }
     
@@ -45,12 +54,20 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         textField.resignFirstResponder()
         return true
     }
-    
-    struct globalId {
-       static var userId = "test"
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.destination.isKind(of: HomeViewController.self) {
+            if let HomeViewController = segue.destination as? HomeViewController {
+                HomeViewController.managedObjectContext = managedObjectContext
+            }
+        }
     }
     
+
     @IBAction func testLogin(_ sender: AnyObject) {
+        statusField.isHidden = false
+        activityWheel.isHidden = false
+        activityWheel.startAnimating()
+        
         let email = emailTextField.text
         let pass = passwordTextField.text
         let encodedPass = pass?.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed)
@@ -69,8 +86,11 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
                     print(responseData)
                     if let parsedJson = responseData {
                         let userId = parsedJson["id"]
-                        print(userId)
-                        self.performSegue(withIdentifier: "loginAccepted", sender: nil)
+                        DispatchQueue.main.async {
+                            self.performSegue(withIdentifier: "loginAccepted",sender: self)
+                        }
+                       globalId.userId = userId! as! String
+                        
                     }
                 } catch {
                     print(error)

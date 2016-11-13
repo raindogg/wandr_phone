@@ -80,16 +80,23 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
             (data, response, error) in
             if error != nil {
                 print(error)
+                self.activityWheel.isHidden = true
+                self.statusField.text = "Something went wrong."
             } else {
                 do {
                     let responseData = try JSONSerialization.jsonObject(with: data!, options: .mutableContainers) as? [String: Any]
-                    print(responseData)
                     if let parsedJson = responseData {
                         let userId = parsedJson["id"]
+                        print(userId)
+                        if userId == nil {
+                            self.activityWheel.isHidden = true
+                            self.statusField.text = "Something went wrong."
+                        } else {
                         DispatchQueue.main.async {
                             self.performSegue(withIdentifier: "loginAccepted",sender: self)
                         }
                        globalId.userId = userId! as! String
+                        }
                         
                     }
                 } catch {
